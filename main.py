@@ -1,18 +1,33 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import tkinter as tk
+import ttkbootstrap as ttk
 
 
 
+class MainApp(ttk.Window):
+    def __init__(self):
+        super().__init__(themename="superhero")
+        self.title("Air Quality App")
+        self.geometry("600x450")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+        # Text entry for city name
+        self.entry_city = ttk.Entry(self, font=("Arial", 12))
+        self.entry_city.pack(pady=10)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+        # Search button
+        self.button_search = ttk.Button(self, text="Search", command=self.search_city)
+        self.button_search.pack(pady=5)
+
+        # Label to display results
+        self.label_info = ttk.Label(self, text="Enter a city and click 'Search'", font=("Arial", 14))
+        self.label_info.pack(pady=20)
+
+    def search_city(self):
+        city = self.entry_city.get()
+        if city:
+            self.label_info.config(text=f"Searching data for: {city}")
+        else:
+            self.label_info.config(text="Please enter a city name!")
+
+if __name__ == "__main__":
+    app = MainApp()
+    app.mainloop()

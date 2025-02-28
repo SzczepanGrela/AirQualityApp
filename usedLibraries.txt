@@ -1,0 +1,5 @@
+tkinter - standard Python GUI
+ttkbootstrap - theme extension for tkinter
+django
+requests
+python-dotenv
