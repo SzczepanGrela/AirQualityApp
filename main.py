@@ -80,22 +80,36 @@ class MainApp(ttk.Window):
             return
 
         closest_station = stations[0]
+        sensors = closest_station['sensors']
+
         measurements = FetchMeasurementsByStationId.fetch_latest_measurements_by_station_id(closest_station['id'])
 
-        # Czyścimy panel z wynikami pomiarów
+
         for widget in self.pollutant_frame.winfo_children():
             widget.destroy()
 
         if measurements:
             measurement_dict = {}
+
             for item in measurements:
-                sensor_resp = FetchSensorById.fetch_sensor_by_id(item["sensorsId"])
-                sensor = sensor_resp[0]
-                param_name = sensor["parameter"]["name"].lower()
+                sensor_id = item["sensorsId"]
+                sensor_data = next(
+                    (sensor for sensor in sensors if sensor.get("id") == sensor_id),
+                    None
+                )
+                if sensor_data and "parameter" in sensor_data:
+                    param_name = sensor_data["parameter"].get("name")
+                    unit = sensor_data["parameter"].get("units")
+                else:
+                    param_name, unit = None, None
+
+                value = item["value"]
+
+
                 measurement_dict[param_name] = {
-                    "value": item["value"],
-                    "unit": sensor["parameter"]["units"],
-                    "datetime": item["datetime"]["local"]
+                    "value": value,
+                    "unit": unit,
+                    "datetime": item["datetime"]
                 }
 
             known_params = ["pm25", "pm10", "no2", "o3", "co", "so2", "voc"]
